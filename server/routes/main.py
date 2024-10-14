@@ -19,7 +19,8 @@ from .token_keys_list import (
 )
 from datetime import datetime, timedelta
 
-app = Flask(__name__, static_folder="../../../build/static", static_url_path="/static")
+load_dotenv()
+app = Flask(__name__, static_folder="../../client/build/static", static_url_path="/static")
 print("app", app)
 CORS(app)
 
@@ -47,9 +48,6 @@ print("app.secret_key", app.secret_key)
 
 @app.after_request
 def after_request(response):
-    response.headers.add(
-        "Content-Type, Authorization, application/json",
-    ),
     print("reponse:", response)
     return response
 
@@ -524,24 +522,24 @@ def get_all_messages():
     return jsonify(message_data), 200
 
 
-# @app.route("/", defaults={"path": ""})
-# @app.route("/<path:path>")
-# def catch_all(path):
-#     print("OS.path", os.path)
-#     print("Build_dir", build_dir)
-#     print("doesFilePathExist", doesFilePathExist)
-#     find_dir = (app.root_path, "..", "..", "..", "build")
-#     print("find_dir", find_dir)
-#     build_dir = os.path.abspath(os.path.join(app.root_path, "..", "..", "..", "build"))
-#     doesFilePathExist = os.path.exists(os.path.abspath(os.path.join(build_dir, path)))
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def catch_all(path):
+    print("OS.path", os.path)
+    find_dir = (app.root_path, "..", "..", "client", "build")
+    print("find_dir", find_dir)
+    build_dir = os.path.abspath(os.path.join(app.root_path, "..", "..", "client", "build"))
+    print("Build_dir", build_dir)
+    doesFilePathExist = os.path.exists(os.path.abspath(os.path.join(build_dir, path)))
+    print("doesFilePathExist", doesFilePathExist)
 
-#     if path != "" and doesFilePathExist:
-#         return send_from_directory(build_dir, path)
-#     else:
-#         try:
-#             return send_from_directory(build_dir, "index.html")
-#         except Exception as e:
-#             return f"An error occurred: {str(e)}", 500
+    if path != "" and doesFilePathExist:
+        return send_from_directory(build_dir, path)
+    else:
+        try:
+            return send_from_directory(build_dir, "index.html")
+        except Exception as e:
+            return f"An error occurred: {str(e)}", 500
 
 
 if __name__ == "__main__":
