@@ -9,7 +9,6 @@ import jwt
 import logging
 from datetime import datetime
 from flask_socketio import SocketIO, emit
-from flask_cors import CORS, cross_origin
 from .token_keys_list import (
     login_key,
     user_id_key,
@@ -22,7 +21,6 @@ from datetime import datetime, timedelta
 load_dotenv()
 app = Flask(__name__, static_folder="../../client/build/static", static_url_path="/static")
 print("app", app)
-CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
@@ -41,7 +39,6 @@ print("DB_USER: ", DB_USER)
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 print("DB_PASSWORD: ", DB_PASSWORD)
 
-CORS(app, resources={r"/*": {"origins": "*"}})
 app.secret_key = flask_app_key
 print("app.secret_key", app.secret_key)
 
